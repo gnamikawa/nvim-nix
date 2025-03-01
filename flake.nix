@@ -10,7 +10,7 @@
     pkgs = import nixpkgs { inherit system; };
   in {
     packages.${system}.default = pkgs.stdenv.mkDerivation {
-      pname = "nvimnix";
+      pname = "nvim-nix";
       version = "1.0";
       buildInputs = with pkgs; [
         go
