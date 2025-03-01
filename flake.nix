@@ -21,6 +21,18 @@
         nodejs_23
         unzip
         luarocks
+        fzf
+        ripgrep
+        ghostscript
+        mermaid-cli
+        tectonic
+        tetex
+        kitty
+        wezterm
+        ghostty
+        fd
+        pkgs.lua5_1
+        sqlite
       ];
       src = ./.; # No actual build, just dependencies
     };
