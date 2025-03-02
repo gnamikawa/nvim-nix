@@ -2,21 +2,16 @@
   description = "A personalized configuration for neovim using nix. Ensures dependencies for enabled plugins.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: let 
-    system = "x86_64-linux";
-    pkgs = import nixpkgs { inherit system; };
-  in {
-    packages.${system}.default = pkgs.stdenv.mkDerivation {
-      pname = "nvim-nix";
-      version = "1.0";
-      buildInputs = with pkgs; [
+  outputs = { self, nixpkgs }:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs { inherit system; };
+      deps = with pkgs; [
         go
         cargo
-        neovim
-        lazygit
         clang
         nodejs_23
         unzip
@@ -31,10 +26,21 @@
         wezterm
         ghostty
         fd
-        pkgs.lua5_1
+        lua5_1
         sqlite
+        lazygit
       ];
-      src = ./.; # No actual build, just dependencies
+    in
+    {
+      # Provide an installable package
+      defaultPackage.${system} = pkgs.buildEnv {
+        name = "nvim-nix";
+        paths = deps;
+      };
+
+      # Provide a development shell
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = deps;
+      };
     };
-  };
 }
